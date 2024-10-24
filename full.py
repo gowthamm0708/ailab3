@@ -19,7 +19,6 @@ bfs(visited,graph,'A')
 
 2)
 
-
 graph = {'A': ['B','C'],'B': ['D','E'],
 	'C': ['F'],'D': [],'E': ['F'], 'F': [] }
 visited=set()
@@ -212,3 +211,204 @@ distance=[[0,10,15,20],[10,0,30,5],[15,30,0,25],[20,5,25,0]]
 route,c=tsp(distance)
 print("The best route is ",route)
 print("The total cost is ",c)
+
+7)
+def tower_of_hanoi(n,source,aux,des): 
+    if n==0:
+       return
+    tower_of_hanoi(n-1,source,des,aux)
+    print("Move disk",n," from source ",source," to ",des) 
+    tower_of_hanoi(n-1,aux,source,des)
+n=3 
+tower_of_hanoi(n,"A","B","C")
+
+8)
+def monkey(n):
+    climb = 0
+    banana = 0
+    hungry = True
+
+    for i in range(n):
+        if hungry:
+            climb += 1
+            banana += 1
+            hungry = False
+        else:
+            climb += 1
+
+    return climb, banana
+
+n = 10
+climb, banana = monkey(n)
+print(f"The monkey made {climb} climbs and got {banana} bananas.")
+
+9)
+MAX, MIN = 1000, -1000
+
+def minimax(depth, nodeindex, maximizingPlayer, values, alpha, beta):
+    if depth == 3:
+        return values[nodeindex]
+    
+    if maximizingPlayer:
+        best = MIN
+        for i in range(0, 2):
+            val = minimax(depth + 1, nodeindex * 2 + i, False, values, alpha, beta)
+            best = max(best, val)
+            alpha = max(alpha, best)
+            if beta <= alpha:
+                break
+        return best
+    else:
+        best = MAX
+        for i in range(0, 2):
+            val = minimax(depth + 1, nodeindex * 2 + i, True, values, alpha, beta)
+            best = min(best, val)
+            beta = min(beta, best)
+            if beta <= alpha:
+                break
+        return best
+
+if __name__ == "__main__":
+    values = [3, 5, 6, 9, 1, 2, 0, -1]
+    print("The optimal value is", minimax(0, 0, True, values, MIN, MAX))
+
+10)
+global N
+N = 4
+
+def printSolution(board):
+    for i in range(N):
+        for j in range(N):
+            print(board[i][j], end=' ')
+        print()
+
+def isSafe(board, row, col):
+    for i in range(col):
+        if board[row][i] == 1:
+            return False
+
+    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+
+    for i, j in zip(range(row, N, 1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+
+    return True
+
+def solveNQUtil(board, col):
+    if col >= N:
+        return True
+
+    for i in range(N):
+        if isSafe(board, i, col):
+            board[i][col] = 1
+
+            if solveNQUtil(board, col + 1) == True:
+                return True
+
+            board[i][col] = 0
+
+    return False
+
+def solveNQ():
+    board = [[0, 0, 0, 0], 
+             [0, 0, 0, 0], 
+             [0, 0, 0, 0], 
+             [0, 0, 0, 0]]
+
+    if solveNQUtil(board, 0) == False:
+        print("Solution does not exist")
+        return False
+
+    printSolution(board)
+    return True
+
+solveNQ()
+
+11)
+import random
+
+responses = [
+    "Hello, how can I help you?", 
+    "What do you want to talk about?", 
+    "I'm not sure what you mean.", 
+    "Can you repeat that?", 
+    "I'm sorry, I don't understand.", 
+    "Goodbye!"
+]
+
+def get_response():
+    return random.choice(responses)
+
+def start_chatbot():
+    print("Hello, I'm a chatbot. What do you want to talk about?")
+    
+    while True:
+        user_input = input()
+        response = get_response()
+        print(response)
+
+start_chatbot()
+
+12)
+import random
+
+def get_word():
+    words = ['apple', 'banana', 'cherry', 'date', 'fig', 'grape', 'honeydew', 'kiwi', 'lemon', 'mango', 'orange', 'papaya', 
+             'peach', 'pineapple', 'plum', 'raspberry', 'strawberry', 'vanilla', 'watermelon']
+    return random.choice(words)
+
+def display_word(word, guessed):
+    return ''.join([char if char in guessed else '_' for char in word])
+
+def play_game():
+    word = get_word()
+    guessed = set()
+    attempts = 10
+    
+    while attempts > 0:
+        print(f'Attempts remaining: {attempts}')
+        print(display_word(word, guessed))
+        guess = input('Guess a letter: ').lower()
+        
+        if len(guess) != 1 or not guess.isalpha():
+            print('Invalid guess. Please guess a letter.')
+            continue
+
+        if guess in guessed:
+            print('You already guessed that letter.')
+            continue
+
+        guessed.add(guess)
+        
+        if guess in word:
+            print('Correct')
+            if set(word).issubset(guessed):
+                print(f'Congratulations! You guessed the word: {word}')
+                break
+        else:
+            attempts -= 1
+            print('Incorrect')
+    
+    if attempts == 0:
+        print(f'Sorry, you ran out of attempts. The word was: {word}')
+
+if __name__ == '__main__':
+    play_game()
+
+13)
+import nltk
+from nltk.corpus import stopwords
+
+nltk.download('stopwords')
+
+with open("file1.txt", "r") as f1, open("file2.txt", "w") as f2:
+    stop = set(stopwords.words('english'))
+    
+    for line in f1:
+        words = line.split()
+        for word in words:
+            if word.lower() not in stop:
+                f2.write(word + " ")
